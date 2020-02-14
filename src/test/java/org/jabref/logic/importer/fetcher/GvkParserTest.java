@@ -45,6 +45,16 @@ public class GvkParserTest {
     }
 
     @Test
+    public void test037C() throws Exception {
+        doTest("gvk_037C.xml", 1, Collections.singletonList("gvk_result_for_797485368.bib"));
+    }
+
+    @Test
+    public void test030F() throws Exception {
+        doTest("gvk_030F.xml", 1, Collections.singletonList("gvk_result_for_797485368.bib"));
+    }
+
+    @Test
     public void testGMP() throws Exception {
         doTest("gvk_gmp.xml", 2, Arrays.asList("gvk_gmp.1.bib", "gvk_gmp.2.bib"));
     }

@@ -80,7 +80,7 @@ public class Authors extends AbstractParamLayoutFormatter {
     private static final String SEMICOLON = "; ";
     private static final String AND = " and ";
     private static final String OXFORD = ", and ";
-    private static boolean[] visited = new boolean[38];
+    private static boolean[] visited = new boolean[42];
 
     private int flMode;
 
@@ -130,127 +130,136 @@ public class Authors extends AbstractParamLayoutFormatter {
             } else if (comp(key, "LastFirstFirstFirst")) {
                 visited[3] = true;
                 flMode = Authors.LF_FF;
+            } else {
+                visited[4] = true;
             }
         } else if (Authors.AUTHOR_ABRV.contains(key.trim().toLowerCase(Locale.ROOT))) {
-            visited[4] = true;
+            visited[5] = true;
             if (comp(key, "FullName")) {
-                visited[5] = true;
+                visited[6] = true;
                 abbreviate = false;
             } else if (comp(key, "Initials")) {
-                visited[6] = true;
+                visited[7] = true;
                 abbreviate = true;
                 firstInitialOnly = false;
             } else if (comp(key, "FirstInitial")) {
-                visited[7] = true;
+                visited[8] = true;
                 abbreviate = true;
                 firstInitialOnly = true;
             } else if (comp(key, "MiddleInitial")) {
-                visited[8] = true;
+                visited[9] = true;
                 abbreviate = true;
                 middleInitial = true;
             } else if (comp(key, "LastName")) {
-                visited[9] = true;
+                visited[10] = true;
                 lastNameOnly = true;
             } else if (comp(key, "InitialsNoSpace")) {
-                visited[10] = true;
+                visited[11] = true;
                 abbreviate = true;
                 abbrSpaces = false;
+            } else {
+                visited[12] = true;
             }
-            visited[11] = true;
         } else if (Authors.AUTHOR_PUNC.contains(key.trim().toLowerCase(Locale.ROOT))) {
-            visited[12] = true;
+            visited[13] = true;
             if (comp(key, "FullPunc")) {
-                visited[13] = true;
+                visited[14] = true;
                 abbrDots = true;
                 lastFirstSeparator = ", ";
             } else if (comp(key, "NoPunc")) {
-                visited[14] = true;
+                visited[15] = true;
                 abbrDots = false;
                 lastFirstSeparator = " ";
             } else if (comp(key, "NoComma")) {
-                visited[15] = true;
+                visited[16] = true;
                 abbrDots = true;
                 lastFirstSeparator = " ";
             } else if (comp(key, "NoPeriod")) {
-                visited[16] = true;
+                visited[17] = true;
                 abbrDots = false;
                 lastFirstSeparator = ", ";
+            } else {
+                visited[18] = true;
             }
         }
 
         // AuthorSep = [Comma | And | Colon | Semicolon | sep=<string>]
         // AuthorLastSep = [And | Comma | Colon | Semicolon | Amp | Oxford | lastsep=<string>]
         else if (Authors.SEPARATORS.contains(key.trim().toLowerCase(Locale.ROOT)) || Authors.LAST_SEPARATORS.contains(key.trim().toLowerCase(Locale.ROOT))) {
-            visited[17] = true;
+            visited[19] = true;
             if (comp(key, "Comma")) {
-                visited[18] = true;
+                visited[20] = true;
                 if (setSep) {
-                    visited[19] = true;
+                    visited[21] = true;
                     lastSeparator = Authors.COMMA;
                 } else {
-                    visited[20] = true;
+                    visited[22] = true;
                     separator = Authors.COMMA;
                     setSep = true;
                 }
             } else if (comp(key, "And")) {
-                visited[21] = true;
+                visited[23] = true;
                 if (setSep) {
-                    visited[22] = true;
+                    visited[24] = true;
                     lastSeparator = Authors.AND;
                 } else {
-                    visited[23] = true;
+                    visited[25] = true;
                     separator = Authors.AND;
                     setSep = true;
                 }
             } else if (comp(key, "Colon")) {
-                visited[24] = true;
+                visited[26] = true;
                 if (setSep) {
-                    visited[25] = true;
+                    visited[27] = true;
                     lastSeparator = Authors.COLON;
                 } else {
-                    visited[26] = true;
+                    visited[28] = true;
                     separator = Authors.COLON;
                     setSep = true;
                 }
             } else if (comp(key, "Semicolon")) {
-                visited[27] = true;
+                visited[29] = true;
                 if (setSep) {
-                    visited[28] = true;
+                    visited[30] = true;
                     lastSeparator = Authors.SEMICOLON;
                 } else {
-                    visited[29] = true;
+                    visited[31] = true;
                     separator = Authors.SEMICOLON;
                     setSep = true;
                 }
             } else if (comp(key, "Oxford")) {
-                visited[30] = true;
+                visited[32] = true;
                 lastSeparator = Authors.OXFORD;
             } else if (comp(key, "Amp")) {
-                visited[31] = true;
+                visited[33] = true;
                 lastSeparator = Authors.AMP;
             } else if (comp(key, "Sep") && !value.isEmpty()) {
-                visited[32] = true;
+                visited[34] = true;
                 separator = value;
                 setSep = true;
             } else if (comp(key, "LastSep") && !value.isEmpty()) {
-                visited[33] = true;
+                visited[35] = true;
                 lastSeparator = value;
+            } else {
+                visited[36] = true;
             }
         } else if ("etal".equalsIgnoreCase(key.trim())) {
-            visited[34] = true;
+            visited[37] = true;
             etAlString = value;
         } else if (Authors.NUMBER_PATTERN.matcher(key.trim()).matches()) {
-            visited[35] = true;
+            visited[38] = true;
             // Just a number:
             int num = Integer.parseInt(key.trim());
             if (setMaxAuthors) {
-                visited[36] = true;
+                visited[39] = true;
                 authorNumberEtAl = num;
             } else {
-                visited[37] = true;
+                visited[40] = true;
                 maxAuthors = num;
                 setMaxAuthors = true;
             }
+        } else {
+            visited[41] = true;
         }
 
         try {

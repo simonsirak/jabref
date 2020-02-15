@@ -8,6 +8,10 @@ import org.jabref.model.strings.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+
 /**
  * Transform a LaTeX-String to RTF.
  *
@@ -28,6 +32,8 @@ public class RTFChars implements LayoutFormatter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LayoutFormatter.class);
 
     private static final RtfCharMap RTF_CHARS = new RtfCharMap();
+
+    private static boolean[] visited = new boolean[46];
 
     @Override
     public String format(String field) {
@@ -207,141 +213,209 @@ public class RTFChars implements LayoutFormatter {
      * @return returns the basic character of the given unicode
      */
     private String transformSpecialCharacter(long c) {
-        if (((192 <= c) && (c <= 197)) || (c == 256) || (c == 258) || (c == 260)) {
+        if (((192 <= c) && (c <= 197)) || (c == 256) || (c == 258) || (c == 260)) {            
+            branchCoverage(0);
             return "A";
         }
         if (((224 <= c) && (c <= 229)) || (c == 257) || (c == 259) || (c == 261)) {
+            branchCoverage(1);
             return "a";
         }
         if ((199 == c) || (262 == c) || (264 == c) || (266 == c) || (268 == c)) {
+            branchCoverage(2);
             return "C";
         }
         if ((231 == c) || (263 == c) || (265 == c) || (267 == c) || (269 == c)) {
+            branchCoverage(3);
             return "c";
         }
         if ((208 == c) || (272 == c)) {
+            branchCoverage(4);
             return "D";
         }
         if ((240 == c) || (273 == c)) {
+            branchCoverage(5);
             return "d";
         }
         if (((200 <= c) && (c <= 203)) || (274 == c) || (276 == c) || (278 == c) || (280 == c) || (282 == c)) {
+            branchCoverage(6);
             return "E";
         }
         if (((232 <= c) && (c <= 235)) || (275 == c) || (277 == c) || (279 == c) || (281 == c) || (283 == c)) {
+            branchCoverage(7);
             return "e";
         }
         if (((284 == c) || (286 == c)) || (288 == c) || (290 == c) || (330 == c)) {
+            branchCoverage(8);
             return "G";
         }
         if ((285 == c) || (287 == c) || (289 == c) || (291 == c) || (331 == c)) {
+            branchCoverage(9);
             return "g";
         }
         if ((292 == c) || (294 == c)) {
+            branchCoverage(10);            
             return "H";
         }
         if ((293 == c) || (295 == c)) {
+            branchCoverage(11);
             return "h";
         }
         if (((204 <= c) && (c <= 207)) || (296 == c) || (298 == c) || (300 == c) || (302 == c) || (304 == c)) {
+            branchCoverage(12);
             return "I";
         }
         if (((236 <= c) && (c <= 239)) || (297 == c) || (299 == c) || (301 == c) || (303 == c)) {
+            branchCoverage(13);
             return "i";
         }
         if (308 == c) {
+            branchCoverage(14);
             return "J";
         }
         if (309 == c) {
+            branchCoverage(15);
             return "j";
         }
         if (310 == c) {
+            branchCoverage(16);
             return "K";
         }
         if (311 == c) {
+            branchCoverage(17);
             return "k";
         }
         if ((313 == c) || (315 == c) || (319 == c)) {
+            branchCoverage(18);
             return "L";
         }
         if ((314 == c) || (316 == c) || (320 == c) || (322 == c)) {
+            branchCoverage(19);
             return "l";
         }
         if ((209 == c) || (323 == c) || (325 == c) || (327 == c)) {
+            branchCoverage(20);
             return "N";
         }
         if ((241 == c) || (324 == c) || (326 == c) || (328 == c)) {
+            branchCoverage(21);
             return "n";
         }
         if (((210 <= c) && (c <= 214)) || (c == 216) || (332 == c) || (334 == c)) {
+            branchCoverage(22);
             return "O";
         }
         if (((242 <= c) && (c <= 248) && (247 != c)) || (333 == c) || (335 == c)) {
+            branchCoverage(23);
             return "o";
         }
         if ((340 == c) || (342 == c) || (344 == c)) {
+            branchCoverage(24);
             return "R";
         }
         if ((341 == c) || (343 == c) || (345 == c)) {
+            branchCoverage(25);
             return "r";
         }
         if ((346 == c) || (348 == c) || (350 == c) || (352 == c)) {
+            branchCoverage(26);
             return "S";
         }
         if ((347 == c) || (349 == c) || (351 == c) || (353 == c)) {
+            branchCoverage(27);
             return "s";
         }
         if ((354 == c) || (356 == c) || (358 == c)) {
+            branchCoverage(28);
             return "T";
         }
         if ((355 == c) || (359 == c)) {
+            branchCoverage(29);
             return "t";
         }
         if (((217 <= c) && (c <= 220)) || (360 == c) || (362 == c) || (364 == c) || (366 == c) || (370 == c)) {
+            branchCoverage(30);
             return "U";
         }
         if (((249 <= c) && (c <= 251)) || (361 == c) || (363 == c) || (365 == c) || (367 == c) || (371 == c)) {
+            branchCoverage(31);
             return "u";
         }
         if (372 == c) {
+            branchCoverage(32);
             return "W";
         }
         if (373 == c) {
+            branchCoverage(33);
             return "w";
         }
         if ((374 == c) || (376 == c) || (221 == c)) {
+            branchCoverage(34);
             return "Y";
         }
         if ((375 == c) || (255 == c)) {
+            branchCoverage(35);
             return "y";
         }
         if ((377 == c) || (379 == c) || (381 == c)) {
+            branchCoverage(36);
             return "Z";
         }
         if ((378 == c) || (380 == c) || (382 == c)) {
+            branchCoverage(37);
             return "z";
         }
         if (198 == c) {
+            branchCoverage(38);
             return "AE";
         }
         if (230 == c) {
+            branchCoverage(39);
             return "ae";
         }
         if (338 == c) {
+            branchCoverage(40);            
             return "OE";
         }
         if (339 == c) {
+            branchCoverage(41);
             return "oe";
         }
         if (222 == c) {
+            branchCoverage(42);
             return "TH";
         }
         if (223 == c) {
+            branchCoverage(43);
             return "ss";
         }
         if (161 == c) {
+            branchCoverage(44);
             return "!";
         }
+        branchCoverage(45);
         return "?";
+    }
+
+    private static void branchCoverage(int index) {
+        visited[index] = true;
+        try {
+            File directory = new File("/branchCoverage");
+            if (!directory.exists()){
+                directory.mkdir();
+            }
+            File f = new File(directory + "/transformSpecialCharacter.txt");
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+            double frac = 0;
+            for (int i = 0; i < visited.length; ++i) {
+                frac += (visited[i] ? 1 : 0);
+                bw.write("branch " + i + " was" + (visited[i] ? " visited." : " not visited.") + "\n");
+            }
+            bw.write("" + frac / visited.length);
+            bw.close();
+        } catch (Exception e) {
+            System.err.println("Path not found");
+        }        
     }
 }

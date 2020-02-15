@@ -87,7 +87,7 @@ public class AuthorsTest {
                 a.format("Bob Croydon Bruce and Jolly Jumper and Charles Manson"));
         
         a = new Authors();
-        a.setArgument("fullname, LastFirst, Add, And");
+        a.setArgument("fullname, LastFirst, And, And");
         assertEquals("Bruce, Bob Croydon and Jumper, Jolly and Manson, Charles", 
                 a.format("Bob Croydon Bruce and Jolly Jumper and Charles Manson"));
     }
@@ -177,7 +177,8 @@ public class AuthorsTest {
         ParamLayoutFormatter a = new Authors();
         a.setArgument("FirstInitial");
         assertEquals("B. Bruce, C. von Manson and J. Jumper",
-                a.format("Bruce, Bob Croydon and Charles Kermit von Manson and Jumper, Jolly"));
+                a.format("Bob Croydon Bruce and Charles Kermit von Manson and Jolly Jumper"));
+                // a.format("Bruce, Bob Croydon and Charles Kermit von Manson and Jumper, Jolly"));
     }
 
     @Test

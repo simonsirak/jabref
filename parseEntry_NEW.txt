@@ -7,7 +7,7 @@ branch 5 was  visited.
 branch 6 was  visited.
 branch 7 was  visited.
 branch 8 was  visited.
-branch 9 was  not visited.
+branch 9 was  visited.
 branch 10 was  visited.
 branch 11 was  visited.
 branch 12 was  not visited.
@@ -23,7 +23,7 @@ branch 21 was  visited.
 branch 22 was  visited.
 branch 23 was  visited.
 branch 24 was  visited.
-branch 25 was  not visited.
+branch 25 was  visited.
 branch 26 was  visited.
 branch 27 was  visited.
 branch 28 was  visited.
@@ -50,8 +50,8 @@ branch 48 was  visited.
 branch 49 was  visited.
 branch 50 was  not visited.
 branch 51 was  not visited.
-branch 52 was  not visited.
-branch 53 was  visited.
+branch 52 was  visited.
+branch 53 was  not visited.
 branch 54 was  visited.
 branch 55 was  not visited.
 branch 56 was  visited.
@@ -63,7 +63,7 @@ branch 61 was  visited.
 branch 62 was  visited.
 branch 63 was  not visited.
 branch 64 was  visited.
-branch 65 was  not visited.
+branch 65 was  visited.
 branch 66 was  visited.
 branch 67 was  not visited.
 branch 68 was  visited.
@@ -82,11 +82,11 @@ branch 80 was  visited.
 branch 81 was  visited.
 branch 82 was  visited.
 branch 83 was  visited.
-branch 84 was  not visited.
+branch 84 was  visited.
 branch 85 was  not visited.
-branch 86 was  not visited.
+branch 86 was  visited.
 branch 87 was  not visited.
-branch 88 was  not visited.
+branch 88 was  visited.
 branch 89 was  visited.
 branch 90 was  visited.
 branch 91 was  visited.
@@ -133,4 +133,4 @@ branch 131 was  visited.
 branch 132 was  not visited.
 branch 133 was  not visited.
 branch 134 was  visited.
-0.7925925925925926
+0.837037037037037

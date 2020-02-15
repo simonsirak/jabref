@@ -263,7 +263,11 @@ public class Authors extends AbstractParamLayoutFormatter {
         }
 
         try {
-            File f = new File("/tmp/handleArgument.txt");
+            File directory = new File("/Temp");
+            if (!directory.exists()){
+                directory.mkdir();
+            }
+            File f = new File(directory + "/handleArgument.txt");
 
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             double frac = 0;
@@ -275,7 +279,7 @@ public class Authors extends AbstractParamLayoutFormatter {
             bw.write("" + frac/visited.length);
             bw.close();
         } catch (Exception e) {
-            System.err.println("ye");
+            System.err.println("Did not find the path");
         }
 
         // SHOULD BE: 58%

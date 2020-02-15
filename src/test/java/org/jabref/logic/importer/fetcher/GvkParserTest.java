@@ -51,7 +51,7 @@ public class GvkParserTest {
 
     @Test
     public void test030F() throws Exception {
-        doTest("gvk_030F.xml", 1, Collections.singletonList("gvk_result_for_797485368.bib"));
+        doTest("gvk_030F.xml", 1, Collections.singletonList("gvk_030F.bib"));
     }
 
     @Test

@@ -221,7 +221,11 @@ public class HTMLChars implements LayoutFormatter {
         }
 
         try {
-            File f = new File("/Temp/format.txt");
+            File directory = new File("/Temp");
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+            File f = new File(directory + "/format.txt");
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             double frac = 0;
             for (int j = 0; j < visited.length; ++j) {

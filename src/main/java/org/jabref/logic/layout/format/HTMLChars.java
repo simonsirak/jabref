@@ -15,7 +15,7 @@ import org.jabref.model.strings.StringUtil;
 public class HTMLChars implements LayoutFormatter {
 
     private static final Map<String, String> HTML_CHARS = HTMLUnicodeConversionMaps.LATEX_HTML_CONVERSION_MAP;
-    private static boolean[] visited = new boolean[39];
+    private static boolean[] visited = new boolean[41];
 
     @Override
     public String format(String inField) {
@@ -218,6 +218,10 @@ public class HTMLChars implements LayoutFormatter {
                 incommand = false;
                 escaped = false;
             }
+        } if (!(field.length() < 0)) {
+            visited[39] = true;
+        } else {
+            visited[40] = true;
         }
 
         try {
@@ -231,9 +235,9 @@ public class HTMLChars implements LayoutFormatter {
             for (int j = 0; j < visited.length; ++j) {
                 frac += (visited[j] ? 1 : 0);
                 bw.write("branch " + j + " was" + (visited[j] ? " visited. " : " not visited. ") + "\n");
-            }
-            bw.write("" + frac / visited.length);
-            bw.close();
+        }
+        bw.write("" + frac / visited.length);
+        bw.close();
         } catch (Exception e) {
             System.err.println("ye");
         }

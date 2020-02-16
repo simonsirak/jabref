@@ -45,7 +45,7 @@ public class BracketedPattern {
     private static final String STARTING_CAPITAL_PATTERN = "[^A-Z]";
     private static final int CHARS_OF_FIRST = 5;
     private static final Pattern REGEX_PATTERN = Pattern.compile(".*\\(\\{([A-Z]+)\\}\\).*");
-    private static boolean[] visited = new boolean[65];
+    private static boolean[] visited = new boolean[68];
 
     private final String pattern;
 
@@ -208,62 +208,79 @@ public class BracketedPattern {
                 // have to check all the time.
                 if ("auth".equals(val)) {
                     visited[9] = true;
+                    getBranchCoverage(visited);
                     return firstAuthor(authString);
                 } else if ("authForeIni".equals(val)) {
                     visited[10] = true;
+                    getBranchCoverage(visited);
                     return firstAuthorForenameInitials(authString);
                 } else if ("authFirstFull".equals(val)) {
                     visited[11] = true;
+                    getBranchCoverage(visited);
                     return firstAuthorVonAndLast(authString);
                 } else if ("authors".equals(val)) {
                     visited[12] = true;
+                    getBranchCoverage(visited);
                     return allAuthors(authString);
                 } else if ("authorsAlpha".equals(val)) {
                     visited[13] = true;
+                    getBranchCoverage(visited);
                     return authorsAlpha(authString);
                 }
                 // Last author's last name
                 else if ("authorLast".equals(val)) {
                     visited[14] = true;
+                    getBranchCoverage(visited);
                     return lastAuthor(authString);
                 } else if ("authorLastForeIni".equals(val)) {
                     visited[15] = true;
+                    getBranchCoverage(visited);
                     return lastAuthorForenameInitials(authString);
                 } else if ("authorIni".equals(val)) {
                     visited[16] = true;
+                    getBranchCoverage(visited);
                     return oneAuthorPlusIni(authString);
                 } else if (val.matches("authIni[\\d]+")) {
                     visited[17] = true;
                     int num = Integer.parseInt(val.substring(7));
+                    getBranchCoverage(visited);
                     return authIniN(authString, num);
                 } else if ("auth.auth.ea".equals(val)) {
                     visited[18] = true;
+                    getBranchCoverage(visited);
                     return authAuthEa(authString);
                 } else if ("auth.etal".equals(val)) {
                     visited[19] = true;
+                    getBranchCoverage(visited);
                     return authEtal(authString, ".", ".etal");
                 } else if ("authEtAl".equals(val)) {
                     visited[20] = true;
+                    getBranchCoverage(visited);
                     return authEtal(authString, "", "EtAl");
                 } else if ("authshort".equals(val)) {
                     visited[21] = true;
+                    getBranchCoverage(visited);
                     return authshort(authString);
                 } else if (val.matches("auth[\\d]+_[\\d]+")) {
                     visited[22] = true;
                     String[] nums = val.substring(4).split("_");
+                    getBranchCoverage(visited);
                     return authNofMth(authString, Integer.parseInt(nums[0]),
                             Integer.parseInt(nums[1]));
                 } else if (val.matches("auth\\d+")) {
                     visited[23] = true;
                     int num = Integer.parseInt(val.substring(4));
+                    getBranchCoverage(visited);
                     return authN(authString, num, isEnforceLegalKey);
                 } else if (val.matches("authors\\d+")) {
                     visited[24] = true;
+                    getBranchCoverage(visited);
                     return nAuthors(authString, Integer.parseInt(val.substring(7)));
                 } else {
                     // This "auth" business was a dead end, so just
                     // use it literally:
                     visited[25] = true;
+                    getBranchCoverage(visited);
                     return entry.getResolvedFieldOrAlias(FieldFactory.parseField(val), database).orElse("");
                 }
             } else if (val.startsWith("ed")) {
@@ -272,38 +289,48 @@ public class BracketedPattern {
                 // don't have to check all the time.
                 if ("edtr".equals(val)) {
                     visited[27] = true;
+                    getBranchCoverage(visited);
                     return firstAuthor(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                 } else if ("edtrForeIni".equals(val)) {
                     visited[28] = true;
+                    getBranchCoverage(visited);
                     return firstAuthorForenameInitials(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                 } else if ("editors".equals(val)) {
                     visited[29] = true;
+                    getBranchCoverage(visited);
                     return allAuthors(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                     // Last author's last name
                 } else if ("editorLast".equals(val)) {
                     visited[30] = true;
+                    getBranchCoverage(visited);
                     return lastAuthor(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                 } else if ("editorLastForeIni".equals(val)) {
                     visited[31] = true;
+                    getBranchCoverage(visited);
                     return lastAuthorForenameInitials(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                 } else if ("editorIni".equals(val)) {
                     visited[32] = true;
+                    getBranchCoverage(visited);
                     return oneAuthorPlusIni(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                 } else if (val.matches("edtrIni[\\d]+")) {
                     visited[33] = true;
                     int num = Integer.parseInt(val.substring(7));
+                    getBranchCoverage(visited);
                     return authIniN(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""), num);
                 } else if (val.matches("edtr[\\d]+_[\\d]+")) {
                     visited[34] = true;
                     String[] nums = val.substring(4).split("_");
+                    getBranchCoverage(visited);
                     return authNofMth(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""),
                             Integer.parseInt(nums[0]),
                             Integer.parseInt(nums[1]) - 1);
                 } else if ("edtr.edtr.ea".equals(val)) {
                     visited[35] = true;
+                    getBranchCoverage(visited);
                     return authAuthEa(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                 } else if ("edtrshort".equals(val)) {
                     visited[36] = true;
+                    getBranchCoverage(visited);
                     return authshort(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                 }
                 // authN. First N chars of the first author's last
@@ -313,65 +340,83 @@ public class BracketedPattern {
                     String fa = firstAuthor(entry.getResolvedFieldOrAlias(StandardField.EDITOR, database).orElse(""));
                     int num = Integer.parseInt(val.substring(4));
                     if (num > fa.length()) {
+                        visited[66] = true;
                         num = fa.length();
                     }
+                    visited[65] = true;
+                    getBranchCoverage(visited);
                     return fa.substring(0, num);
                 } else {
                     visited[38] = true;
                     // This "ed" business was a dead end, so just
                     // use it literally:
+                    getBranchCoverage(visited);
                     return entry.getResolvedFieldOrAlias(FieldFactory.parseField(val), database).orElse("");
                 }
             } else if ("firstpage".equals(val)) {
                 visited[39] = true;
+                getBranchCoverage(visited);
                 return firstPage(entry.getResolvedFieldOrAlias(StandardField.PAGES, database).orElse(""));
             } else if ("pageprefix".equals(val)) {
                 visited[40] = true;
+                getBranchCoverage(visited);
                 return pagePrefix(entry.getResolvedFieldOrAlias(StandardField.PAGES, database).orElse(""));
             } else if ("lastpage".equals(val)) {
                 visited[41] = true;
+                getBranchCoverage(visited);
                 return lastPage(entry.getResolvedFieldOrAlias(StandardField.PAGES, database).orElse(""));
             } else if ("title".equals(val)) {
                 visited[42] = true;
+                getBranchCoverage(visited);
                 return camelizeSignificantWordsInTitle(entry.getResolvedFieldOrAlias(StandardField.TITLE, database).orElse(""));
             } else if ("fulltitle".equals(val)) {
                 visited[43] = true;
+                getBranchCoverage(visited);
                 return entry.getResolvedFieldOrAlias(StandardField.TITLE, database).orElse("");
             } else if ("shorttitle".equals(val)) {
                 visited[44] = true;
+                getBranchCoverage(visited);
                 return getTitleWords(3,
                         removeSmallWords(entry.getResolvedFieldOrAlias(StandardField.TITLE, database).orElse("")));
             } else if ("shorttitleINI".equals(val)) {
                 visited[45] = true;
+                getBranchCoverage(visited);
                 return keepLettersAndDigitsOnly(
                         applyModifiers(getTitleWordsWithSpaces(3, entry.getResolvedFieldOrAlias(StandardField.TITLE, database).orElse("")),
                                 Collections.singletonList("abbr"), 0));
             } else if ("veryshorttitle".equals(val)) {
                 visited[46] = true;
+                getBranchCoverage(visited);
                 return getTitleWords(1,
                         removeSmallWords(entry.getResolvedFieldOrAlias(StandardField.TITLE, database).orElse("")));
             } else if ("camel".equals(val)) {
                 visited[47] = true;
+                getBranchCoverage(visited);
                 return getCamelizedTitle(entry.getResolvedFieldOrAlias(StandardField.TITLE, database).orElse(""));
             } else if ("shortyear".equals(val)) {
                 visited[48] = true;
                 String yearString = entry.getResolvedFieldOrAlias(StandardField.YEAR, database).orElse("");
                 if (yearString.isEmpty()) {
                     visited[49] = true;
+                    getBranchCoverage(visited);
                     return yearString;
                     // In press/in preparation/submitted
                 } else if (yearString.startsWith("in") || yearString.startsWith("sub")) {
                     visited[50] = true;
+                    getBranchCoverage(visited);
                     return "IP";
                 } else if (yearString.length() > 2) {
                     visited[51] = true;
+                    getBranchCoverage(visited);
                     return yearString.substring(yearString.length() - 2);
                 } else {
                     visited[52] = true;
+                    getBranchCoverage(visited);
                     return yearString;
                 }
             } else if ("entrytype".equals(val)) {
                 visited[53] = true;
+                getBranchCoverage(visited);
                 return entry.getResolvedFieldOrAlias(InternalField.TYPE_HEADER, database).orElse("");
             } else if (val.matches("keyword\\d+")) {
                 visited[54] = true;
@@ -381,10 +426,12 @@ public class BracketedPattern {
                 if (separatedKeywords.size() < num) {
                     visited[55] = true;
                     // not enough keywords
+                    getBranchCoverage(visited);
                     return "";
                 } else {
                     visited[56] = true;
                     // num counts from 1 to n, but index in arrayList count from 0 to n-1
+                    getBranchCoverage(visited);
                     return separatedKeywords.get(num - 1).toString();
                 }
             } else if (val.matches("keywords\\d*")) {
@@ -401,6 +448,7 @@ public class BracketedPattern {
                 KeywordList separatedKeywords = entry.getResolvedKeywords(keywordDelimiter, database);
                 StringBuilder sb = new StringBuilder();
                 int i = 0;
+                int sizeOfSeparatedKeywords = separatedKeywords.size();
                 for (Keyword keyword : separatedKeywords) {
                     visited[60] = true;
                     // remove all spaces
@@ -414,6 +462,10 @@ public class BracketedPattern {
                         visited[62] = true;
                     }
                 }
+                if (sizeOfSeparatedKeywords == 0) {
+                    visited[67] = true;
+                }
+                getBranchCoverage(visited);
                 return sb.toString();
             } else {
                 visited[63] = true;

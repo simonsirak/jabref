@@ -184,5 +184,19 @@ class RTFCharsTest {
         assertEquals("\\'cf", formatter.format("\\\"I"));
         assertEquals("\\'d6", formatter.format("\\\"O"));
         assertEquals("\\'dc", formatter.format("\\\"U"));
+    }    
+
+    @Test
+    void testComplicated7() {
+        assertEquals("This \\u204s a \\u223ample t\\u200st \\u354hat \\u199o\\u209tains \\u372eird c\\u292a\\u340acter\\u346\\u161"
+                , formatter.format("This Ìs a ßample tÈst Ţhat ÇoÑtains Ŵeird cĤaŔacterŚ¡"));
     }
+
+    @Test
+    void testMoreSpecialCharacters() {
+        assertEquals("\\u199c", formatter.format("{\\CC}")); // Ç  
+        assertEquals("\\u373", formatter.format("\\^{w}")); // ŵ            
+        assertEquals("\\u209", formatter.format("\\~N")); // Ñ     Ź
+        assertEquals("\\u377", formatter.format("\\'{Z}")); // Ź
+    }   
 }

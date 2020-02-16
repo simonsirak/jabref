@@ -186,29 +186,29 @@ class RTFCharsTest {
         assertEquals("\\'dc", formatter.format("\\\"U"));
     }    
 
+    
     @Test
     void testComplicated7() {
-        assertEquals("This \\u204s a \\u223ample t\\u200st \\u354hat \\u199o\\u209tains \\u372eird c\\u292a\\u340acter\\u346\\u161"
+        assertEquals("This \\u204Is a \\u223ssample t\\u200Est \\u354That \\u199Co\\u209Ntains \\u372Weird c\\u292Ha\\u340Racter\\u346S\\u161!"
                 , formatter.format("This Ìs a ßample tÈst Ţhat ÇoÑtains Ŵeird cĤaŔacterŚ¡"));
     }
 
     @Test
     void testComplicated8() {
-        assertEquals("We \\u198re missing \\u355ests for ce\\u341tain \\u313etters"
+        assertEquals("We \\u198AEre missing \\u355tests for ce\\u341rtain \\u313Letters"
                 , formatter.format("We Ære missing ţests for ceŕtain Ĺetters"));
     }
 
     @Test
     void testComplicated9() {
-        assertEquals("\\u374o\\u217 have to see these lette\u222s, they are \\u310inda am\\u338zin\\u284."
+        assertEquals("\\u374Yo\\u217U have to see these lette\\u222THs, they are \\u310Kinda am\\u338OEzin\\u284G."
                 , formatter.format("ŶoÙ have to see these letteÞs, they are Ķinda amŒzinĜ."));
     }
 
     @Test
-    void testMoreSpecialCharacters() {
-        assertEquals("\\u199c", formatter.format("{\\CC}")); // Ç  
-        assertEquals("\\u373", formatter.format("\\^{w}")); // ŵ            
-        assertEquals("\\u209", formatter.format("\\~N")); // Ñ    
-        assertEquals("\\u377", formatter.format("\\'{Z}")); // Ź
+    void testMoreSpecialCharacters() {        
+        assertEquals("\\u373w", formatter.format("\\^{w}")); // ŵ            
+        assertEquals("\\u209N", formatter.format("\\~N")); // Ñ    
+        assertEquals("\\u377Z", formatter.format("\\'{Z}")); // Ź
     }   
 }

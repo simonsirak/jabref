@@ -400,22 +400,17 @@ public class RTFChars implements LayoutFormatter {
     private static void branchCoverage(int index) {
         visited[index] = true;
         try {
-            File directory = new File("/branchCoverage");
-            if (!directory.exists()){
-                directory.mkdir();
-            }
-            File f = new File(directory + "/transformSpecialCharacter.txt");
-
+            File f = new File("/tmp/transformSpecialCharacter.txt");
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             double frac = 0;
-            for (int i = 0; i < visited.length; ++i) {
+            for(int i = 0; i < visited.length; ++i) {
                 frac += (visited[i] ? 1 : 0);
-                bw.write("branch " + i + " was" + (visited[i] ? " visited." : " not visited.") + "\n");
+                bw.write("branch " + i + " was " + (visited[i] ? " visited." : " not visited.") + "\n");
             }
-            bw.write("" + frac / visited.length);
+            bw.write("" + frac/visited.length);
             bw.close();
-        } catch (Exception e) {
-            System.err.println("Path not found");
-        }        
+        } catch (Exception exc) {
+            System.err.println("ye");
+        }	        
     }
 }

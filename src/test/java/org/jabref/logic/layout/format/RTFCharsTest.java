@@ -193,10 +193,22 @@ class RTFCharsTest {
     }
 
     @Test
+    void testComplicated8() {
+        assertEquals("We \\u198re missing \\u355ests for ce\\u341tain \\u313etters"
+                , formatter.format("We Ære missing ţests for ceŕtain Ĺetters"));
+    }
+
+    @Test
+    void testComplicated9() {
+        assertEquals("\\u374o\\u217 have to see these lette\u222s, they are \\u310inda am\\u338zin\\u284."
+                , formatter.format("ŶoÙ have to see these letteÞs, they are Ķinda amŒzinĜ."));
+    }
+
+    @Test
     void testMoreSpecialCharacters() {
         assertEquals("\\u199c", formatter.format("{\\CC}")); // Ç  
         assertEquals("\\u373", formatter.format("\\^{w}")); // ŵ            
-        assertEquals("\\u209", formatter.format("\\~N")); // Ñ     Ź
+        assertEquals("\\u209", formatter.format("\\~N")); // Ñ    
         assertEquals("\\u377", formatter.format("\\'{Z}")); // Ź
     }   
 }

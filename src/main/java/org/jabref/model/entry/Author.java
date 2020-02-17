@@ -18,7 +18,7 @@ import org.jabref.model.strings.StringUtil;
  * all other methods are provided for completeness.
  */
 public class Author {
-    static boolean[] visited = new boolean[32];
+    static boolean[] visited = new boolean[31];
 
     private final String firstPart;
 
@@ -176,8 +176,6 @@ public class Author {
             }
             if (!(name.length() > i + 1)) {
                 visited[31] = true;
-            } else {
-                visited[30] = true;
             }
             if (nextWordIsUppercase) {
                 visited[26] = true;

@@ -476,51 +476,33 @@ public class AuthorListParser {
         }
         if ("and".equalsIgnoreCase(original.substring(tokenStart, tokenEnd))) {
             visited[34] = true;
-
-            try {
-                File directory = new File("/Temp");
-                if (!directory.exists()){
-                    directory.mkdir();
-                }
-                File f = new File(directory + "/getToken1.txt");
-                BufferedWriter bw = new BufferedWriter(new FileWriter(f));
-                double frac = 0;
-                for (int j = 0; j < visited.length; ++j) {
-                    frac += (visited[j] ? 1 : 0);
-                    bw.write("branch " + j + " was" + (visited[j] ? " visited. " : " not visited. ") + "\n");
-                }
-                bw.write("" + frac / visited.length);
-                bw.close();
-            } catch (Exception e) {
-                System.err.println("Did not find the path");
-            }
-            
+            branchCoverage();
             return TOKEN_AND;
         } else {
             visited[35] = true;
-
-            try {
-                File directory = new File("/Temp");
-                if (!directory.exists()){
-                    directory.mkdir();
-                }
-                File f = new File(directory + "/getToken2.txt");
-                BufferedWriter bw = new BufferedWriter(new FileWriter(f));
-                double frac = 0;
-                for (int j = 0; j < visited.length; ++j) {
-                    frac += (visited[j] ? 1 : 0);
-                    bw.write("branch " + j + " was" + (visited[j] ? " visited. " : " not visited. ") + "\n");
-                }
-                bw.write("" + frac / visited.length);
-                bw.close();
-            } catch (Exception e) {
-                System.err.println("Did not find the path");
-            }            
-
+            branchCoverage();
             return TOKEN_WORD;
         }
+    }
 
-
+    private static void branchCoverage() {
+        try {
+            File directory = new File("/Temp");
+            if (!directory.exists()){
+                directory.mkdir();
+            }
+            File f = new File(directory + "/getToken.txt");
+            BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+            double frac = 0;
+            for (int j = 0; j < visited.length; ++j) {
+                frac += (visited[j] ? 1 : 0);
+                bw.write("branch " + j + " was" + (visited[j] ? " visited. " : " not visited. ") + "\n");
+            }
+            bw.write("" + frac / visited.length);
+            bw.close();
+        } catch (Exception e) {
+            System.err.println("Did not find the path");
+        }        
     }
 
 }

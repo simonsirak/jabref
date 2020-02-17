@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class GvkParser implements Parser {
-    private static boolean[] visited = new boolean[135]; 
+    private static boolean[] visited = new boolean[135];
     private static final Logger LOGGER = LoggerFactory.getLogger(GvkParser.class);
 
     private String author = null;
@@ -58,8 +58,6 @@ public class GvkParser implements Parser {
     private String subtitle = "";
 
     private EntryType entryType = StandardEntryType.Book; // Default
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(GvkParser.class);
 
     @Override
     public List<BibEntry> parseEntries(InputStream inputStream) throws ParseException {
@@ -190,8 +188,7 @@ public class GvkParser implements Parser {
             //title and subtitle
             if ("021A".equals(tag)) {
                 visited[19] = true;
-                title = getSubfield("a", datafield);
-                subtitle = getSubfield("d", datafield);
+                setTitleAndStatementOfResponsibilityArea(datafield);
             } else {
                 visited[20] = true;
             }
@@ -199,8 +196,7 @@ public class GvkParser implements Parser {
             //publisher and address
             if ("033A".equals(tag)) {
                 visited[21] = true;
-                publisher = getSubfield("n", datafield);
-                address = getSubfield("p", datafield);
+                setFirstPublisher(datafield);
             } else {
                 visited[22] = true;
             }
@@ -208,7 +204,7 @@ public class GvkParser implements Parser {
             //year
             if ("011@".equals(tag)) {
                 visited[23] = true;
-                year = getSubfield("a", datafield);
+                setDateOfPublication(datafield);
             } else {
                 visited[24] = true;
             }
@@ -216,12 +212,7 @@ public class GvkParser implements Parser {
             //year, volume, number, pages (year bei Zeitschriften (evtl. redundant mit 011@))
             if ("031A".equals(tag)) {
                 visited[25] = true;
-                year = getSubfield("j", datafield);
-
-                volume = getSubfield("e", datafield);
-                number = getSubfield("a", datafield);
-                pages = getSubfield("h", datafield);
-
+                setNumberingArea(datafield);
             } else {
                 visited[26] = true;
             }
@@ -231,25 +222,7 @@ public class GvkParser implements Parser {
             // 036D also contains information normally found in 036E
             if ("036D".equals(tag)) {
                 visited[27] = true;
-                // 021 might have been present
-                if (title != null) {
-                    visited[28] = true;
-                    // convert old title (contained in "a" of 021A) to volume
-                    if (title.startsWith("@")) {
-                        visited[29] = true;
-                        // "@" indicates a number
-                        title = title.substring(1);
-                    } else {
-                        visited[30] = true;
-                    }
-                    number = title;
-                } else {
-                    visited[31] = true;
-                }
-                //title and subtitle
-                title = getSubfield("a", datafield);
-                subtitle = getSubfield("d", datafield);
-                volume = getSubfield("l", datafield);
+                setLinkToMultiVolumePublication(datafield);
             } else {
                 visited[32] = true;
             }
@@ -432,12 +405,10 @@ public class GvkParser implements Parser {
                 visited[72] = true;
             }
         }
-
         // if we skipped the for loop completely
-        if(SIZEOFDATAFIELDS == 0) {
+        if (SIZEOFDATAFIELDS == 0) {
             visited[73] = true;
         }
-
         // Abfangen von Nulleintraegen
         if (quelle == null) {
             visited[74] = true;
@@ -686,6 +657,49 @@ public class GvkParser implements Parser {
         }
 
         return result;
+    }
+
+    private void setLinkToMultiVolumePublication(Element datafield) {
+        // 021 might have been present
+        if (title != null) {
+            visited[28] = true;
+            // convert old title (contained in "a" of 021A) to volume
+            if (title.startsWith("@")) {
+                visited[29] = true;
+                // "@" indicates a number
+                title = title.substring(1);
+            } else {
+                visited[30] = true;
+            }
+            number = title;
+        } else {
+            visited[31] = true;
+        }
+        //title and subtitle
+        title = getSubfield("a", datafield);
+        subtitle = getSubfield("d", datafield);
+        volume = getSubfield("l", datafield);
+    }
+
+    private void setNumberingArea(Element datafield) {
+        year = getSubfield("j", datafield);
+        volume = getSubfield("e", datafield);
+        number = getSubfield("a", datafield);
+        pages = getSubfield("h", datafield);
+    }
+
+    private void setDateOfPublication(Element datafield) {
+        year = getSubfield("a", datafield);
+    }
+
+    private void setFirstPublisher(Element datafield) {
+        publisher = getSubfield("n", datafield);
+        address = getSubfield("p", datafield);
+    }
+
+    private void setTitleAndStatementOfResponsibilityArea(Element datafield) {
+        title = getSubfield("a", datafield);
+        subtitle = getSubfield("d", datafield);
     }
 
     private String getSubfield(String a, Element datafield) {

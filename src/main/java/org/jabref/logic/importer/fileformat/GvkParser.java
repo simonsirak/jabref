@@ -112,13 +112,7 @@ public class GvkParser implements Parser {
             // mak
             if ("002@".equals(tag)) {
                 visited[1] = true;
-                mak = getSubfield("0", datafield);
-                if (mak == null) {
-                    visited[2] = true;
-                    mak = "";
-                } else {
-                    visited[3] = true;
-                }
+                setBibliographicTypeAndStatus(datafield);
             } else {
                 visited[4] = true;
             }
@@ -126,25 +120,15 @@ public class GvkParser implements Parser {
             //ppn
             if ("003@".equals(tag)) {
                 visited[5] = true;
-                ppn = getSubfield("0", datafield);
+                setRecordControlNumber(datafield);
             } else {
                 visited[6] = true;
             }
 
             //author
             if ("028A".equals(tag)) {
-                visited[7] = true;
-                String vorname = getSubfield("d", datafield);
-                String nachname = getSubfield("a", datafield);
-
-                if (author == null) {
-                    visited[8] = true;
-                    author = "";
-                } else {
-                    visited[9] = true;
-                    author = author.concat(" and ");
-                }
-                author = author.concat(vorname + " " + nachname);
+                visited[7] = true;  
+                setPrimaryauthor(datafield);              
             } else {
                 visited[10] = true;
             }
@@ -152,17 +136,7 @@ public class GvkParser implements Parser {
             //author (weiterer)
             if ("028B".equals(tag)) {
                 visited[11] = true;
-                String vorname = getSubfield("d", datafield);
-                String nachname = getSubfield("a", datafield);
-
-                if (author == null) {
-                    visited[12] = true;
-                    author = "";
-                } else {
-                    visited[13] = true;
-                    author = author.concat(" and ");
-                }
-                author = author.concat(vorname + " " + nachname);
+                setCoauthor(datafield);
             } else {
                 visited[14] = true;
             }
@@ -170,17 +144,7 @@ public class GvkParser implements Parser {
             //editor
             if ("028C".equals(tag)) {
                 visited[15] = true;
-                String vorname = getSubfield("d", datafield);
-                String nachname = getSubfield("a", datafield);
-
-                if (editor == null) {
-                    visited[16] = true;
-                    editor = "";
-                } else {
-                    visited[17] = true;
-                    editor = editor.concat(" and ");
-                }
-                editor = editor.concat(vorname + " " + nachname);
+                setSecondaryAuthor(datafield);
             } else {
                 visited[18] = true;
             }
@@ -326,10 +290,7 @@ public class GvkParser implements Parser {
              */
             if ("027D".equals(tag)) {
                 visited[55] = true;
-                journal = getSubfield("a", datafield);
-                booktitle = getSubfield("a", datafield);
-                address = getSubfield("p", datafield);
-                publisher = getSubfield("n", datafield);
+                parseVolumeSetAndEssayData(datafield);
             } else {
                 visited[56] = true;
             }
@@ -337,15 +298,7 @@ public class GvkParser implements Parser {
             //pagetotal
             if ("034D".equals(tag)) {
                 visited[57] = true;
-                pagetotal = getSubfield("a", datafield);
-
-                if (pagetotal != null) {
-                    visited[58] = true;
-                    // S, S. etc. entfernen
-                    pagetotal = pagetotal.replaceAll(" S\\.?$", "");
-                } else {
-                    visited[59] = true;
-                }
+                parsePhysicalInformationData(datafield);
             } else {
                 visited[60] = true;
             }
@@ -353,16 +306,7 @@ public class GvkParser implements Parser {
             // Behandlung von Konferenzen
             if ("030F".equals(tag)) {
                 visited[61] = true;
-                address = getSubfield("k", datafield);
-
-                if (!"proceedings".equals(entryType)) {
-                    visited[62] = true;
-                    subtitle = getSubfield("a", datafield);
-                } else {
-                    visited[63] = true;
-                }
-
-                entryType = StandardEntryType.Proceedings;
+                parseConferenceData(datafield);
             } else {
                 visited[64] = true;
             }
@@ -384,14 +328,14 @@ public class GvkParser implements Parser {
             //und Nummer angegeben werden)
             if ("039B".equals(tag)) {
                 visited[67] = true;
-                quelle = getSubfield("8", datafield);
+                parseRelationToParentLiteratureData(datafield);
             } else {
                 visited[68] = true;
             }
 
             if ("046R".equals(tag) && ((quelle == null) || quelle.isEmpty())) {
                 visited[69] = true;
-                quelle = getSubfield("a", datafield);
+                parseLiteratureSourceData(datafield);
             } else {
                 visited[70] = true;
             }
@@ -400,7 +344,7 @@ public class GvkParser implements Parser {
             if ("009P".equals(tag) && ("03".equals(datafield.getAttribute("occurrence"))
                     || "05".equals(datafield.getAttribute("occurrence"))) && (url == null)) {
                 visited[71] = true;
-                url = getSubfield("a", datafield);
+                parseOnlineResourceData(datafield);
             } else {
                 visited[72] = true;
             }
@@ -487,160 +431,7 @@ public class GvkParser implements Parser {
          */
         BibEntry result = new BibEntry(entryType);
 
-        // Zuordnung der Felder in Abhängigkeit vom Dokumenttyp
-        if (author != null) {
-            visited[92] = true;
-            result.setField(StandardField.AUTHOR, author);
-        } else {
-            visited[93] = true;
-        }
-
-        if (editor != null) {
-            visited[94] = true;
-            result.setField(StandardField.EDITOR, editor);
-        } else {
-            visited[95] = true;
-        }
-
-        if (title != null) {
-            visited[96] = true;
-            result.setField(StandardField.TITLE, title);
-        } else {
-            visited[97] = true;
-        }
-
-        if (!Strings.isNullOrEmpty(subtitle)) {
-            visited[98] = true;
-            // ensure that first letter is an upper case letter
-            // there could be the edge case that the string is only one character long, therefore, this special treatment
-            // this is Apache commons lang StringUtils.capitalize (https://commons.apache.org/proper/commons-lang/javadocs/api-release/org/apache/commons/lang3/StringUtils.html#capitalize%28java.lang.String%29), but we don't want to add an additional dependency  ('org.apache.commons:commons-lang3:3.4')
-            StringBuilder newSubtitle = new StringBuilder(
-                    Character.toString(Character.toUpperCase(subtitle.charAt(0))));
-            if (subtitle.length() > 1) {
-                visited[99] = true;
-                newSubtitle.append(subtitle.substring(1));
-            } else {
-                visited[100] = true;
-            }
-            result.setField(StandardField.SUBTITLE, newSubtitle.toString());
-        } else {
-            visited[101] = true;
-        }
-
-        if (publisher != null) {
-            visited[102] = true;
-            result.setField(StandardField.PUBLISHER, publisher);
-        } else {
-            visited[103] = true;
-        }
-
-        if (year != null) {
-            visited[104] = true;
-            result.setField(StandardField.YEAR, year);
-        } else {
-            visited[105] = true;
-        }
-
-        if (address != null) {
-            visited[106] = true;
-            result.setField(StandardField.ADDRESS, address);
-        } else {
-            visited[107] = true;
-        }
-
-        if (series != null) {
-            visited[108] = true;
-            result.setField(StandardField.SERIES, series);
-        } else {
-            visited[109] = true;
-        }
-
-        if (edition != null) {
-            visited[110] = true;
-            result.setField(StandardField.EDITION, edition);
-        } else {
-            visited[111] = true;
-        }
-
-        if (isbn != null) {
-            visited[112] = true;
-            result.setField(StandardField.ISBN, isbn);
-        } else {
-            visited[113] = true;
-        }
-
-        if (issn != null) {
-            visited[114] = true;
-            result.setField(StandardField.ISSN, issn);
-        } else {
-            visited[115] = true;
-        }
-
-        if (number != null) {
-            visited[116] = true;
-            result.setField(StandardField.NUMBER, number);
-        } else {
-            visited[117] = true;
-        }
-
-        if (pagetotal != null) {
-            visited[118] = true;
-            result.setField(StandardField.PAGETOTAL, pagetotal);
-        } else {
-            visited[119] = true;
-        }
-
-        if (pages != null) {
-            visited[120] = true;
-            result.setField(StandardField.PAGES, pages);
-        } else {
-            visited[121] = true;
-        }
-
-        if (volume != null) {
-            visited[122] = true;
-            result.setField(StandardField.VOLUME, volume);
-        } else {
-            visited[123] = true;
-        }
-
-        if (journal != null) {
-            visited[124] = true;
-            result.setField(StandardField.JOURNAL, journal);
-        } else {
-            visited[125] = true;
-        }
-
-        if (ppn != null) {
-            visited[126] = true;
-            result.setField(new UnknownField("ppn_GVK"), ppn);
-        } else {
-            visited[127] = true;
-        }
-
-        if (url != null) {
-            visited[128] = true;
-            result.setField(StandardField.URL, url);
-        } else {
-            visited[129] = true;
-        }
-
-        if (note != null) {
-            visited[130] = true;
-            result.setField(StandardField.NOTE, note);
-        } else {
-            visited[131] = true;
-        }
-
-        if ("article".equals(entryType) && (journal != null)) {
-            visited[132] = true;
-            result.setField(StandardField.JOURNAL, journal);
-        } else if ("incollection".equals(entryType) && (booktitle != null)) {
-            visited[133] = true;
-            result.setField(StandardField.BOOKTITLE, booktitle);
-        } else {
-            visited[134] = true;
-        }
+        configureBibEntry(result);
 
         try {
             File f = new File("/tmp/parseEntry.txt");
@@ -657,6 +448,196 @@ public class GvkParser implements Parser {
         }
 
         return result;
+    }
+
+    /* HELPER FUNCTIONS FOR parseEntry */
+
+    private void parseVolumeSetAndEssayData(Element datafield) {
+        journal = getSubfield("a", datafield);
+        booktitle = getSubfield("a", datafield);
+        address = getSubfield("p", datafield);
+        publisher = getSubfield("n", datafield);
+    }
+
+    private void parsePhysicalInformationData(Element datafield) {
+        pagetotal = getSubfield("a", datafield);
+
+        if (pagetotal != null) {
+            // S, S. etc. entfernen
+            pagetotal = pagetotal.replaceAll(" S\\.?$", "");
+        }
+    }
+
+    private void parseConferenceData(Element datafield) {
+        address = getSubfield("k", datafield);
+
+        if (!"proceedings".equals(entryType)) {
+            subtitle = getSubfield("a", datafield);
+        }
+
+        entryType = StandardEntryType.Proceedings;
+    }
+
+    private void parseRelationToParentLiteratureData(Element datafield) {
+        quelle = getSubfield("8", datafield);
+    }
+    
+    private void parseLiteratureSourceData(Element datafield) {
+        quelle = getSubfield("a", datafield);
+    }
+
+    private void parseOnlineResourceData(Element datafield) {
+        url = getSubfield("a", datafield);
+    }
+
+    private void configureBibEntry(BibEntry result) {
+        // Zuordnung der Felder in Abhängigkeit vom Dokumenttyp
+        if (author != null) {
+            result.setField(StandardField.AUTHOR, author);
+        }
+
+        if (editor != null) {
+            result.setField(StandardField.EDITOR, editor);
+        }
+
+        if (title != null) {
+            result.setField(StandardField.TITLE, title);
+        }
+
+        if (!Strings.isNullOrEmpty(subtitle)) {
+            // ensure that first letter is an upper case letter
+            // there could be the edge case that the string is only one character long, therefore, this special treatment
+            // this is Apache commons lang StringUtils.capitalize (https://commons.apache.org/proper/commons-lang/javadocs/api-release/org/apache/commons/lang3/StringUtils.html#capitalize%28java.lang.String%29), but we don't want to add an additional dependency  ('org.apache.commons:commons-lang3:3.4')
+            StringBuilder newSubtitle = new StringBuilder(
+                    Character.toString(Character.toUpperCase(subtitle.charAt(0))));
+            if (subtitle.length() > 1) {
+                newSubtitle.append(subtitle.substring(1));
+            }
+
+            result.setField(StandardField.SUBTITLE, newSubtitle.toString());
+        }
+
+        if (publisher != null) {
+            result.setField(StandardField.PUBLISHER, publisher);
+        } 
+
+        if (year != null) {
+            result.setField(StandardField.YEAR, year);
+        }
+
+        if (address != null) {
+            result.setField(StandardField.ADDRESS, address);
+        }
+
+        if (series != null) {
+            result.setField(StandardField.SERIES, series);
+        }
+
+        if (edition != null) {
+            result.setField(StandardField.EDITION, edition);
+        } 
+
+        if (isbn != null) {
+            result.setField(StandardField.ISBN, isbn);
+        }
+
+        if (issn != null) {
+            result.setField(StandardField.ISSN, issn);
+        }
+
+        if (number != null) {
+            result.setField(StandardField.NUMBER, number);
+        }
+
+        if (pagetotal != null) {
+            result.setField(StandardField.PAGETOTAL, pagetotal);
+        }
+
+        if (pages != null) {
+            result.setField(StandardField.PAGES, pages);
+        }
+
+        if (volume != null) {
+            result.setField(StandardField.VOLUME, volume);
+        }
+
+        if (journal != null) {
+            result.setField(StandardField.JOURNAL, journal);
+        }
+
+        if (ppn != null) {
+            result.setField(new UnknownField("ppn_GVK"), ppn);
+        } 
+
+        if (url != null) {
+            result.setField(StandardField.URL, url);
+        }
+
+        if (note != null) {
+            result.setField(StandardField.NOTE, note);
+        }
+
+        if ("article".equals(entryType) && (journal != null)) {
+            result.setField(StandardField.JOURNAL, journal);
+        } else if ("incollection".equals(entryType) && (booktitle != null)) {
+            result.setField(StandardField.BOOKTITLE, booktitle);
+        }
+    }
+
+    private void setBibliographicTypeAndStatus(Element datafield) {
+        mak = getSubfield("0", datafield);
+        if (mak == null) {
+            visited[2] = true;
+            mak = "";
+        } else {
+            visited[3] = true;
+        }
+    }
+
+    private void setRecordControlNumber(Element datafield) {
+        ppn = getSubfield("0", datafield);
+    }
+
+    private void setPrimaryauthor(Element datafield) {
+        String vorname = getSubfield("d", datafield);
+        String nachname = getSubfield("a", datafield);
+
+        if (author == null) {
+            visited[8] = true;
+            author = "";
+        } else {
+            visited[9] = true;
+            author = author.concat(" and ");
+        }
+        author = author.concat(vorname + " " + nachname);
+    }
+
+    private void setCoauthor(Element datafield) {
+        String vorname = getSubfield("d", datafield);
+        String nachname = getSubfield("a", datafield);
+
+        if (author == null) {
+            visited[12] = true;
+            author = "";
+        } else {
+            visited[13] = true;
+            author = author.concat(" and ");
+        }
+        author = author.concat(vorname + " " + nachname);        
+    }
+
+    private void setSecondaryAuthor(Element datafield) {
+        String vorname = getSubfield("d", datafield);
+        String nachname = getSubfield("a", datafield);
+
+        if (editor == null) {
+            visited[16] = true;
+            editor = "";
+        } else {
+            visited[17] = true;
+            editor = editor.concat(" and ");
+        }
+        editor = editor.concat(vorname + " " + nachname);
     }
 
     private void parseLinkToMultiVolumePublicationData(Element datafield) {
@@ -679,7 +660,7 @@ public class GvkParser implements Parser {
         title = getSubfield("a", datafield);
         subtitle = getSubfield("d", datafield);
         volume = getSubfield("l", datafield);
-    }
+    }    
 
     private void parseNumberingAreaData(Element datafield) {
         year = getSubfield("j", datafield);

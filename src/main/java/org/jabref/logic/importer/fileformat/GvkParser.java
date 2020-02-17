@@ -112,13 +112,7 @@ public class GvkParser implements Parser {
             // mak
             if ("002@".equals(tag)) {
                 visited[1] = true;
-                mak = getSubfield("0", datafield);
-                if (mak == null) {
-                    visited[2] = true;
-                    mak = "";
-                } else {
-                    visited[3] = true;
-                }
+                setBibliographicTypeAndStatus(datafield);
             } else {
                 visited[4] = true;
             }
@@ -126,25 +120,15 @@ public class GvkParser implements Parser {
             //ppn
             if ("003@".equals(tag)) {
                 visited[5] = true;
-                ppn = getSubfield("0", datafield);
+                setRecordControlNumber(datafield);
             } else {
                 visited[6] = true;
             }
 
             //author
             if ("028A".equals(tag)) {
-                visited[7] = true;
-                String vorname = getSubfield("d", datafield);
-                String nachname = getSubfield("a", datafield);
-
-                if (author == null) {
-                    visited[8] = true;
-                    author = "";
-                } else {
-                    visited[9] = true;
-                    author = author.concat(" and ");
-                }
-                author = author.concat(vorname + " " + nachname);
+                visited[7] = true;  
+                setPrimaryauthor(datafield);              
             } else {
                 visited[10] = true;
             }
@@ -152,17 +136,7 @@ public class GvkParser implements Parser {
             //author (weiterer)
             if ("028B".equals(tag)) {
                 visited[11] = true;
-                String vorname = getSubfield("d", datafield);
-                String nachname = getSubfield("a", datafield);
-
-                if (author == null) {
-                    visited[12] = true;
-                    author = "";
-                } else {
-                    visited[13] = true;
-                    author = author.concat(" and ");
-                }
-                author = author.concat(vorname + " " + nachname);
+                setCoauthor(datafield);
             } else {
                 visited[14] = true;
             }
@@ -170,17 +144,7 @@ public class GvkParser implements Parser {
             //editor
             if ("028C".equals(tag)) {
                 visited[15] = true;
-                String vorname = getSubfield("d", datafield);
-                String nachname = getSubfield("a", datafield);
-
-                if (editor == null) {
-                    visited[16] = true;
-                    editor = "";
-                } else {
-                    visited[17] = true;
-                    editor = editor.concat(" and ");
-                }
-                editor = editor.concat(vorname + " " + nachname);
+                setSecondaryAuthor(datafield);
             } else {
                 visited[18] = true;
             }
@@ -659,6 +623,62 @@ public class GvkParser implements Parser {
         return result;
     }
 
+    private void setBibliographicTypeAndStatus(Element datafield) {
+        mak = getSubfield("0", datafield);
+        if (mak == null) {
+            visited[2] = true;
+            mak = "";
+        } else {
+            visited[3] = true;
+        }
+    }
+
+    private void setRecordControlNumber(Element datafield) {
+        ppn = getSubfield("0", datafield);
+    }
+
+    private void setPrimaryauthor(Element datafield) {
+        String vorname = getSubfield("d", datafield);
+        String nachname = getSubfield("a", datafield);
+
+        if (author == null) {
+            visited[8] = true;
+            author = "";
+        } else {
+            visited[9] = true;
+            author = author.concat(" and ");
+        }
+        author = author.concat(vorname + " " + nachname);
+    }
+
+    private void setCoauthor(Element datafield) {
+        String vorname = getSubfield("d", datafield);
+        String nachname = getSubfield("a", datafield);
+
+        if (author == null) {
+            visited[12] = true;
+            author = "";
+        } else {
+            visited[13] = true;
+            author = author.concat(" and ");
+        }
+        author = author.concat(vorname + " " + nachname);        
+    }
+
+    private void setSecondaryAuthor(Element datafield) {
+        String vorname = getSubfield("d", datafield);
+        String nachname = getSubfield("a", datafield);
+
+        if (editor == null) {
+            visited[16] = true;
+            editor = "";
+        } else {
+            visited[17] = true;
+            editor = editor.concat(" and ");
+        }
+        editor = editor.concat(vorname + " " + nachname);
+    }
+
     private void setLinkToMultiVolumePublication(Element datafield) {
         // 021 might have been present
         if (title != null) {
@@ -679,7 +699,7 @@ public class GvkParser implements Parser {
         title = getSubfield("a", datafield);
         subtitle = getSubfield("d", datafield);
         volume = getSubfield("l", datafield);
-    }
+    }    
 
     private void setNumberingArea(Element datafield) {
         year = getSubfield("j", datafield);

@@ -188,7 +188,7 @@ public class GvkParser implements Parser {
             //title and subtitle
             if ("021A".equals(tag)) {
                 visited[19] = true;
-                setTitleAndStatementOfResponsibilityArea(datafield);
+                parseTitleAndStatementOfResponsibilityAreaData(datafield);
             } else {
                 visited[20] = true;
             }
@@ -196,7 +196,7 @@ public class GvkParser implements Parser {
             //publisher and address
             if ("033A".equals(tag)) {
                 visited[21] = true;
-                setFirstPublisher(datafield);
+                parseFirstPublisherData(datafield);
             } else {
                 visited[22] = true;
             }
@@ -204,7 +204,7 @@ public class GvkParser implements Parser {
             //year
             if ("011@".equals(tag)) {
                 visited[23] = true;
-                setDateOfPublication(datafield);
+                parseDateOfPublicationData(datafield);
             } else {
                 visited[24] = true;
             }
@@ -212,7 +212,7 @@ public class GvkParser implements Parser {
             //year, volume, number, pages (year bei Zeitschriften (evtl. redundant mit 011@))
             if ("031A".equals(tag)) {
                 visited[25] = true;
-                setNumberingArea(datafield);
+                parseNumberingAreaData(datafield);
             } else {
                 visited[26] = true;
             }
@@ -222,7 +222,7 @@ public class GvkParser implements Parser {
             // 036D also contains information normally found in 036E
             if ("036D".equals(tag)) {
                 visited[27] = true;
-                setLinkToMultiVolumePublication(datafield);
+                parseLinkToMultiVolumePublicationData(datafield);
             } else {
                 visited[32] = true;
             }
@@ -659,7 +659,7 @@ public class GvkParser implements Parser {
         return result;
     }
 
-    private void setLinkToMultiVolumePublication(Element datafield) {
+    private void parseLinkToMultiVolumePublicationData(Element datafield) {
         // 021 might have been present
         if (title != null) {
             visited[28] = true;
@@ -681,23 +681,23 @@ public class GvkParser implements Parser {
         volume = getSubfield("l", datafield);
     }
 
-    private void setNumberingArea(Element datafield) {
+    private void parseNumberingAreaData(Element datafield) {
         year = getSubfield("j", datafield);
         volume = getSubfield("e", datafield);
         number = getSubfield("a", datafield);
         pages = getSubfield("h", datafield);
     }
 
-    private void setDateOfPublication(Element datafield) {
+    private void parseDateOfPublicationData(Element datafield) {
         year = getSubfield("a", datafield);
     }
 
-    private void setFirstPublisher(Element datafield) {
+    private void parseFirstPublisherData(Element datafield) {
         publisher = getSubfield("n", datafield);
         address = getSubfield("p", datafield);
     }
 
-    private void setTitleAndStatementOfResponsibilityArea(Element datafield) {
+    private void parseTitleAndStatementOfResponsibilityAreaData(Element datafield) {
         title = getSubfield("a", datafield);
         subtitle = getSubfield("d", datafield);
     }

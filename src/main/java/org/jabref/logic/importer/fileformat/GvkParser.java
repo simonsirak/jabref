@@ -194,16 +194,7 @@ public class GvkParser implements Parser {
             //series and number
             if ("036E".equals(tag)) {
                 visited[33] = true;
-                series = getSubfield("a", datafield);
-                number = getSubfield("l", datafield);
-                String kor = getSubfield("b", datafield);
-
-                if (kor != null) {
-                    visited[34] = true;
-                    series = series + " / " + kor;
-                } else {
-                    visited[35] = true;
-                }
+                setExtraLinkSerialPublication(datafield);
             } else {
                 visited[36] = true;
             }
@@ -211,7 +202,7 @@ public class GvkParser implements Parser {
             //note
             if ("037A".equals(tag)) {
                 visited[37] = true;
-                note = getSubfield("a", datafield);
+                setGeneralNote(datafield);
             } else {
                 visited[38] = true;
             }
@@ -219,7 +210,7 @@ public class GvkParser implements Parser {
             //edition
             if ("032@".equals(tag)) {
                 visited[39] = true;
-                edition = getSubfield("a", datafield);
+                setEditionArea(datafield);
             } else {
                 visited[40] = true;
             }
@@ -227,23 +218,7 @@ public class GvkParser implements Parser {
             //isbn
             if ("004A".equals(tag)) {
                 visited[41] = true;
-                final String isbn10 = getSubfield("0", datafield);
-                final String isbn13 = getSubfield("A", datafield);
-
-                if (isbn10 != null) {
-                    visited[42] = true;
-                    isbn = isbn10;
-                } else {
-                    visited[43] = true;
-                }
-
-                if (isbn13 != null) {
-                    visited[44] = true;
-                    isbn = isbn13;
-                } else {
-                    visited[45] = true;
-                }
-
+                setISBN(datafield);
             } else {
                 visited[46] = true;
             }
@@ -252,26 +227,7 @@ public class GvkParser implements Parser {
             // Bei einer Verlagsdissertation ist der Ort schon eingetragen
             if ("037C".equals(tag)) {
                 visited[47] = true;
-                if (address == null) {
-                    visited[48] = true;
-                    address = getSubfield("b", datafield);
-                    if (address != null) {
-                        visited[49] = true;
-                        address = removeSortCharacters(address);
-                    } else {
-                        visited[50] = true;
-                    }
-                } else {
-                    visited[51] = true;
-                }
-
-                String st = getSubfield("a", datafield);
-                if ((st != null) && st.contains("Diss")) {
-                    visited[52] = true;
-                    entryType = StandardEntryType.PhdThesis;
-                } else {
-                    visited[53] = true;
-                }
+                setDissertationNote(datafield);
             } else {
                 visited[54] = true;
             }
@@ -681,6 +637,49 @@ public class GvkParser implements Parser {
     private void parseTitleAndStatementOfResponsibilityAreaData(Element datafield) {
         title = getSubfield("a", datafield);
         subtitle = getSubfield("d", datafield);
+    }
+
+    private void setExtraLinkSerialPublication(Element datafield) {
+        series = getSubfield("a", datafield);
+        number = getSubfield("l", datafield);
+        String kor = getSubfield("b", datafield);
+        if (kor != null) {
+            series = series + " / " + kor;
+        }      
+    }
+
+    private void setGeneralNote(Element datafield)  {
+        note = getSubfield("a", datafield);
+    }
+
+    private void setEditionArea(Element datafield) {
+        edition = getSubfield("a", datafield);
+    }
+
+    private void setISBN(Element datafield) {
+        final String isbn10 = getSubfield("0", datafield);
+        final String isbn13 = getSubfield("A", datafield);
+
+        if (isbn10 != null) {
+            isbn = isbn10;
+
+        if (isbn13 != null) {
+            isbn = isbn13;
+        }
+    }
+
+    private void setDissertationNote(Element datafield) {
+        if (address == null) {
+            address = getSubfield("b", datafield);
+            if (address != null) {
+                address = removeSortCharacters(address);
+            } 
+        }
+
+        String st = getSubfield("a", datafield);
+        if ((st != null) && st.contains("Diss")) {
+            entryType = StandardEntryType.PhdThesis;
+        }
     }
 
     private String getSubfield(String a, Element datafield) {

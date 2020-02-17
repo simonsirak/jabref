@@ -218,12 +218,9 @@ public class HTMLChars implements LayoutFormatter {
                 incommand = false;
                 escaped = false;
             }
-        } if (!(field.length() < 0)) {
+        } if (field.length() == 0) {
             visited[39] = true;
-        } else {
-            visited[40] = true;
         }
-
         try {
             File directory = new File("/Temp");
             if (!directory.exists()) {

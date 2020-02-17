@@ -33,6 +33,34 @@ public class GvkParser implements Parser {
     private static boolean[] visited = new boolean[135]; 
     private static final Logger LOGGER = LoggerFactory.getLogger(GvkParser.class);
 
+    private String author = null;
+    private String editor = null;
+    private String title = null;
+    private String publisher = null;
+    private String year = null;
+    private String address = null;
+    private String series = null;
+    private String edition = null;
+    private String isbn = null;
+    private String issn = null;
+    private String number = null;
+    private String pagetotal = null;
+    private String volume = null;
+    private String pages = null;
+    private String journal = null;
+    private String ppn = null;
+    private String booktitle = null;
+    private String url = null;
+    private String note = null;
+
+    private String quelle = "";
+    private String mak = "";
+    private String subtitle = "";
+
+    private EntryType entryType = StandardEntryType.Book; // Default
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GvkParser.class);
+
     @Override
     public List<BibEntry> parseEntries(InputStream inputStream) throws ParseException {
         try {
@@ -74,32 +102,6 @@ public class GvkParser implements Parser {
     }
 
     private BibEntry parseEntry(Element e) {
-        String author = null;
-        String editor = null;
-        String title = null;
-        String publisher = null;
-        String year = null;
-        String address = null;
-        String series = null;
-        String edition = null;
-        String isbn = null;
-        String issn = null;
-        String number = null;
-        String pagetotal = null;
-        String volume = null;
-        String pages = null;
-        String journal = null;
-        String ppn = null;
-        String booktitle = null;
-        String url = null;
-        String note = null;
-
-        String quelle = "";
-        String mak = "";
-        String subtitle = "";
-
-        EntryType entryType = StandardEntryType.Book; // Default
-
         // Alle relevanten Informationen einsammeln
 
         List<Element> datafields = getChildren("datafield", e);

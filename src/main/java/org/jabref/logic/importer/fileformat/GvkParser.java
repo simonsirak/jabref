@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class GvkParser implements Parser {
-    private static boolean[] visited = new boolean[135];
+    private static boolean[] visited = new boolean[64];
     private static final Logger LOGGER = LoggerFactory.getLogger(GvkParser.class);
 
     private String author = null;
@@ -114,122 +114,122 @@ public class GvkParser implements Parser {
                 visited[1] = true;
                 setBibliographicTypeAndStatus(datafield);
             } else {
-                visited[4] = true;
+                visited[2] = true;
             }
 
             //ppn
             if ("003@".equals(tag)) {
-                visited[5] = true;
+                visited[3] = true;
                 setRecordControlNumber(datafield);
             } else {
-                visited[6] = true;
+                visited[4] = true;
             }
 
             //author
             if ("028A".equals(tag)) {
-                visited[7] = true;  
+                visited[5] = true;  
                 setPrimaryauthor(datafield);              
             } else {
-                visited[10] = true;
+                visited[6] = true;
             }
 
             //author (weiterer)
             if ("028B".equals(tag)) {
-                visited[11] = true;
+                visited[7] = true;
                 setCoauthor(datafield);
             } else {
-                visited[14] = true;
+                visited[8] = true;
             }
 
             //editor
             if ("028C".equals(tag)) {
-                visited[15] = true;
+                visited[9] = true;
                 setSecondaryAuthor(datafield);
             } else {
-                visited[18] = true;
+                visited[10] = true;
             }
 
             //title and subtitle
             if ("021A".equals(tag)) {
-                visited[19] = true;
+                visited[11] = true;
                 parseTitleAndStatementOfResponsibilityAreaData(datafield);
             } else {
-                visited[20] = true;
+                visited[12] = true;
             }
 
             //publisher and address
             if ("033A".equals(tag)) {
-                visited[21] = true;
+                visited[13] = true;
                 parseFirstPublisherData(datafield);
             } else {
-                visited[22] = true;
+                visited[14] = true;
             }
 
             //year
             if ("011@".equals(tag)) {
-                visited[23] = true;
+                visited[15] = true;
                 parseDateOfPublicationData(datafield);
             } else {
-                visited[24] = true;
+                visited[16] = true;
             }
 
             //year, volume, number, pages (year bei Zeitschriften (evtl. redundant mit 011@))
             if ("031A".equals(tag)) {
-                visited[25] = true;
+                visited[17] = true;
                 parseNumberingAreaData(datafield);
             } else {
-                visited[26] = true;
+                visited[18] = true;
             }
 
             // 036D seems to contain more information than the other fields
             // overwrite information using that field
             // 036D also contains information normally found in 036E
             if ("036D".equals(tag)) {
-                visited[27] = true;
+                visited[19] = true;
                 parseLinkToMultiVolumePublicationData(datafield);
             } else {
-                visited[32] = true;
+                visited[20] = true;
             }
 
             //series and number
             if ("036E".equals(tag)) {
-                visited[33] = true;
+                visited[21] = true;
                 setExtraLinkSerialPublication(datafield);
             } else {
-                visited[36] = true;
+                visited[22] = true;
             }
 
             //note
             if ("037A".equals(tag)) {
-                visited[37] = true;
+                visited[23] = true;
                 setGeneralNote(datafield);
             } else {
-                visited[38] = true;
+                visited[24] = true;
             }
 
             //edition
             if ("032@".equals(tag)) {
-                visited[39] = true;
+                visited[25] = true;
                 setEditionArea(datafield);
             } else {
-                visited[40] = true;
+                visited[26] = true;
             }
 
             //isbn
             if ("004A".equals(tag)) {
-                visited[41] = true;
+                visited[27] = true;
                 setISBN(datafield);
             } else {
-                visited[46] = true;
+                visited[28] = true;
             }
 
             // Hochschulschriftenvermerk
             // Bei einer Verlagsdissertation ist der Ort schon eingetragen
             if ("037C".equals(tag)) {
-                visited[47] = true;
+                visited[29] = true;
                 setDissertationNote(datafield);
             } else {
-                visited[54] = true;
+                visited[30] = true;
             }
 
             //journal oder booktitle
@@ -245,34 +245,34 @@ public class GvkParser implements Parser {
              * (sonst in Kategorie 033A).
              */
             if ("027D".equals(tag)) {
-                visited[55] = true;
+                visited[31] = true;
                 parseVolumeSetAndEssayData(datafield);
             } else {
-                visited[56] = true;
+                visited[32] = true;
             }
 
             //pagetotal
             if ("034D".equals(tag)) {
-                visited[57] = true;
+                visited[33] = true;
                 parsePhysicalInformationData(datafield);
             } else {
-                visited[60] = true;
+                visited[34] = true;
             }
 
             // Behandlung von Konferenzen
             if ("030F".equals(tag)) {
-                visited[61] = true;
+                visited[35] = true;
                 parseConferenceData(datafield);
             } else {
-                visited[64] = true;
+                visited[36] = true;
             }
 
             // Wenn eine Verlagsdiss vorliegt
             if (entryType.equals(StandardEntryType.PhdThesis) && (isbn != null)) {
-                visited[65] = true;
+                visited[37] = true;
                 entryType = StandardEntryType.Book;
             } else {
-                visited[66] = true;
+                visited[38] = true;
             }
 
             //Hilfskategorien zur Entscheidung @article
@@ -283,99 +283,99 @@ public class GvkParser implements Parser {
             //Quelle unvollständig sind (z.B. nicht Serie
             //und Nummer angegeben werden)
             if ("039B".equals(tag)) {
-                visited[67] = true;
+                visited[38] = true;
                 parseRelationToParentLiteratureData(datafield);
             } else {
-                visited[68] = true;
+                visited[40] = true;
             }
 
             if ("046R".equals(tag) && ((quelle == null) || quelle.isEmpty())) {
-                visited[69] = true;
+                visited[41] = true;
                 parseLiteratureSourceData(datafield);
             } else {
-                visited[70] = true;
+                visited[42] = true;
             }
 
             // URLs behandeln
             if ("009P".equals(tag) && ("03".equals(datafield.getAttribute("occurrence"))
                     || "05".equals(datafield.getAttribute("occurrence"))) && (url == null)) {
-                visited[71] = true;
+                visited[43] = true;
                 parseOnlineResourceData(datafield);
             } else {
-                visited[72] = true;
+                visited[44] = true;
             }
         }
         // if we skipped the for loop completely
         if (SIZEOFDATAFIELDS == 0) {
-            visited[73] = true;
+            visited[45] = true;
         }
         // Abfangen von Nulleintraegen
         if (quelle == null) {
-            visited[74] = true;
+            visited[46] = true;
             quelle = "";
         } else {
-            visited[75] = true;
+            visited[47] = true;
         }
 
         // Nichtsortierzeichen entfernen
         if (author != null) {
-            visited[76] = true;
+            visited[48] = true;
             author = removeSortCharacters(author);
         } else {
-            visited[77] = true;
+            visited[49] = true;
         }
 
         if (editor != null) {
-            visited[78] = true;
+            visited[50] = true;
             editor = removeSortCharacters(editor);
         } else {
-            visited[79] = true;
+            visited[51] = true;
         }
 
         if (title != null) {
-            visited[80] = true;
+            visited[52] = true;
             title = removeSortCharacters(title);
         } else {
-            visited[81] = true;
+            visited[53] = true;
         }
 
         if (subtitle != null) {
-            visited[82] = true;
+            visited[54] = true;
             subtitle = removeSortCharacters(subtitle);
         } else {
-            visited[83] = true;
+            visited[55] = true;
         }
 
         // Dokumenttyp bestimmen und Eintrag anlegen
 
         if (mak.startsWith("As")) {
-            visited[84] = true;
+            visited[56] = true;
             entryType = BibEntry.DEFAULT_TYPE;
 
             if (quelle.contains("ISBN")) {
-                visited[85] = true;
+                visited[57] = true;
                 entryType = StandardEntryType.InCollection;
             } else {
-                visited[86] = true;
+                visited[58] = true;
             }
 
             if (quelle.contains("ZDB-ID")) {
-                visited[87] = true;
+                visited[59] = true;
                 entryType = StandardEntryType.Article;
             } else {
-                visited[88] = true;
+                visited[60] = true;
             }
 
         } else if (mak.isEmpty()) {
-            visited[89] = true;
+            visited[61] = true;
             entryType = BibEntry.DEFAULT_TYPE;
         } else if (mak.startsWith("O")) {
-            visited[90] = true;
+            visited[62] = true;
             entryType = BibEntry.DEFAULT_TYPE;
             // FIXME: online only available in Biblatex
             //entryType = "online";
         } else {
-            visited[91] = true;
+            visited[63] = true;
         }
 
         /*
@@ -400,7 +400,8 @@ public class GvkParser implements Parser {
             bw.write("" + frac/visited.length);
             bw.close();
         } catch (Exception exc) {
-            System.err.println("ye");
+            System.err.println("Could not open/write to file!");
+            exc.printStackTrace();
         }
 
         return result;
@@ -543,10 +544,8 @@ public class GvkParser implements Parser {
     private void setBibliographicTypeAndStatus(Element datafield) {
         mak = getSubfield("0", datafield);
         if (mak == null) {
-            visited[2] = true;
             mak = "";
         } else {
-            visited[3] = true;
         }
     }
 
@@ -559,10 +558,8 @@ public class GvkParser implements Parser {
         String nachname = getSubfield("a", datafield);
 
         if (author == null) {
-            visited[8] = true;
             author = "";
         } else {
-            visited[9] = true;
             author = author.concat(" and ");
         }
         author = author.concat(vorname + " " + nachname);
@@ -573,10 +570,8 @@ public class GvkParser implements Parser {
         String nachname = getSubfield("a", datafield);
 
         if (author == null) {
-            visited[12] = true;
             author = "";
         } else {
-            visited[13] = true;
             author = author.concat(" and ");
         }
         author = author.concat(vorname + " " + nachname);        
@@ -587,10 +582,8 @@ public class GvkParser implements Parser {
         String nachname = getSubfield("a", datafield);
 
         if (editor == null) {
-            visited[16] = true;
             editor = "";
         } else {
-            visited[17] = true;
             editor = editor.concat(" and ");
         }
         editor = editor.concat(vorname + " " + nachname);
@@ -599,19 +592,15 @@ public class GvkParser implements Parser {
     private void parseLinkToMultiVolumePublicationData(Element datafield) {
         // 021 might have been present
         if (title != null) {
-            visited[28] = true;
             // convert old title (contained in "a" of 021A) to volume
             if (title.startsWith("@")) {
-                visited[29] = true;
                 // "@" indicates a number
                 title = title.substring(1);
-            } else {
-                visited[30] = true;
             }
+
             number = title;
-        } else {
-            visited[31] = true;
         }
+        
         //title and subtitle
         title = getSubfield("a", datafield);
         subtitle = getSubfield("d", datafield);

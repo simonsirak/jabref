@@ -651,12 +651,13 @@ public class GvkParser implements Parser {
 
         if (isbn10 != null) {
             isbn = isbn10;
+        }
 
         if (isbn13 != null) {
             isbn = isbn13;
         }
     }
-
+    
     private void parseDissertationNoteData(Element datafield) {
         if (address == null) {
             address = getSubfield("b", datafield);

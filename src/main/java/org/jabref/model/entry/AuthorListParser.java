@@ -356,6 +356,7 @@ public class AuthorListParser {
         tokenEnd = tokenStart;
         if (tokenStart >= original.length()) {
             visited[4] = true;
+            branchCoverage();
             return TOKEN_EOF;
         }
         else {
@@ -364,6 +365,7 @@ public class AuthorListParser {
         if (original.charAt(tokenStart) == ',') {
             visited[6] = true;
             tokenEnd++;
+            branchCoverage();
             return TOKEN_COMMA;
         }
         else {
@@ -373,6 +375,7 @@ public class AuthorListParser {
         if (original.charAt(tokenStart) == ';') {
             visited[8] = true;
             tokenEnd++;
+            branchCoverage();
             return TOKEN_AND;
         }
         else {

@@ -112,7 +112,7 @@ public class GvkParser implements Parser {
             // mak
             if ("002@".equals(tag)) {
                 visited[1] = true;
-                setBibliographicTypeAndStatus(datafield);
+                parseBibliographicTypeAndStatusData(datafield);
             } else {
                 visited[2] = true;
             }
@@ -120,7 +120,7 @@ public class GvkParser implements Parser {
             //ppn
             if ("003@".equals(tag)) {
                 visited[3] = true;
-                setRecordControlNumber(datafield);
+                parseRecordControlNumberData(datafield);
             } else {
                 visited[4] = true;
             }
@@ -128,7 +128,7 @@ public class GvkParser implements Parser {
             //author
             if ("028A".equals(tag)) {
                 visited[5] = true;  
-                setPrimaryauthor(datafield);              
+                parsePrimaryAuthorData(datafield);              
             } else {
                 visited[6] = true;
             }
@@ -136,7 +136,7 @@ public class GvkParser implements Parser {
             //author (weiterer)
             if ("028B".equals(tag)) {
                 visited[7] = true;
-                setCoauthor(datafield);
+                parseCoauthorData(datafield);
             } else {
                 visited[8] = true;
             }
@@ -144,7 +144,7 @@ public class GvkParser implements Parser {
             //editor
             if ("028C".equals(tag)) {
                 visited[9] = true;
-                setSecondaryAuthor(datafield);
+                parseSecondaryAuthorData(datafield);
             } else {
                 visited[10] = true;
             }
@@ -194,7 +194,7 @@ public class GvkParser implements Parser {
             //series and number
             if ("036E".equals(tag)) {
                 visited[21] = true;
-                setExtraLinkSerialPublication(datafield);
+                parseExtraLinkSerialPublicationData(datafield);
             } else {
                 visited[22] = true;
             }
@@ -202,7 +202,7 @@ public class GvkParser implements Parser {
             //note
             if ("037A".equals(tag)) {
                 visited[23] = true;
-                setGeneralNote(datafield);
+                parseGeneralNoteData(datafield);
             } else {
                 visited[24] = true;
             }
@@ -210,7 +210,7 @@ public class GvkParser implements Parser {
             //edition
             if ("032@".equals(tag)) {
                 visited[25] = true;
-                setEditionArea(datafield);
+                parseEditionAreaData(datafield);
             } else {
                 visited[26] = true;
             }
@@ -218,7 +218,7 @@ public class GvkParser implements Parser {
             //isbn
             if ("004A".equals(tag)) {
                 visited[27] = true;
-                setISBN(datafield);
+                parseISBNData(datafield);
             } else {
                 visited[28] = true;
             }
@@ -227,7 +227,7 @@ public class GvkParser implements Parser {
             // Bei einer Verlagsdissertation ist der Ort schon eingetragen
             if ("037C".equals(tag)) {
                 visited[29] = true;
-                setDissertationNote(datafield);
+                parseDissertationNoteData(datafield);
             } else {
                 visited[30] = true;
             }
@@ -541,7 +541,7 @@ public class GvkParser implements Parser {
         }
     }
 
-    private void setBibliographicTypeAndStatus(Element datafield) {
+    private void parseBibliographicTypeAndStatusData(Element datafield) {
         mak = getSubfield("0", datafield);
         if (mak == null) {
             mak = "";
@@ -549,11 +549,11 @@ public class GvkParser implements Parser {
         }
     }
 
-    private void setRecordControlNumber(Element datafield) {
+    private void parseRecordControlNumberData(Element datafield) {
         ppn = getSubfield("0", datafield);
     }
 
-    private void setPrimaryauthor(Element datafield) {
+    private void parsePrimaryAuthorData(Element datafield) {
         String vorname = getSubfield("d", datafield);
         String nachname = getSubfield("a", datafield);
 
@@ -565,7 +565,7 @@ public class GvkParser implements Parser {
         author = author.concat(vorname + " " + nachname);
     }
 
-    private void setCoauthor(Element datafield) {
+    private void parseCoauthorData(Element datafield) {
         String vorname = getSubfield("d", datafield);
         String nachname = getSubfield("a", datafield);
 
@@ -577,7 +577,7 @@ public class GvkParser implements Parser {
         author = author.concat(vorname + " " + nachname);        
     }
 
-    private void setSecondaryAuthor(Element datafield) {
+    private void parseSecondaryAuthorData(Element datafield) {
         String vorname = getSubfield("d", datafield);
         String nachname = getSubfield("a", datafield);
 
@@ -600,7 +600,7 @@ public class GvkParser implements Parser {
 
             number = title;
         }
-        
+
         //title and subtitle
         title = getSubfield("a", datafield);
         subtitle = getSubfield("d", datafield);
@@ -628,7 +628,7 @@ public class GvkParser implements Parser {
         subtitle = getSubfield("d", datafield);
     }
 
-    private void setExtraLinkSerialPublication(Element datafield) {
+    private void parseExtraLinkSerialPublicationData(Element datafield) {
         series = getSubfield("a", datafield);
         number = getSubfield("l", datafield);
         String kor = getSubfield("b", datafield);
@@ -637,15 +637,15 @@ public class GvkParser implements Parser {
         }      
     }
 
-    private void setGeneralNote(Element datafield)  {
+    private void parseGeneralNoteData(Element datafield)  {
         note = getSubfield("a", datafield);
     }
 
-    private void setEditionArea(Element datafield) {
+    private void parseEditionAreaData(Element datafield) {
         edition = getSubfield("a", datafield);
     }
 
-    private void setISBN(Element datafield) {
+    private void parseISBNData(Element datafield) {
         final String isbn10 = getSubfield("0", datafield);
         final String isbn13 = getSubfield("A", datafield);
 
@@ -657,7 +657,7 @@ public class GvkParser implements Parser {
         }
     }
 
-    private void setDissertationNote(Element datafield) {
+    private void parseDissertationNoteData(Element datafield) {
         if (address == null) {
             address = getSubfield("b", datafield);
             if (address != null) {

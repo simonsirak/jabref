@@ -18,7 +18,7 @@ import org.jabref.model.strings.StringUtil;
  * all other methods are provided for completeness.
  */
 public class Author {
-    static boolean[] visited = new boolean[31];
+    static boolean[] visited = new boolean[33];
 
     private final String firstPart;
 
@@ -189,6 +189,9 @@ public class Author {
             } else {
                 visited[29] = true;
             }
+        }
+        if (name.length() == 0) {
+            visited[32] = true;
         }
         getBranchCoverage(visited);
         return sb.toString().trim();
